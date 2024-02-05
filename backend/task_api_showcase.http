@@ -1,0 +1,29 @@
+#####
+POST http://localhost:8080/api/private/tasks
+Content-Type: application/json
+Authorization: Bearer {{keyJwt}}
+
+{
+  "title": "minha tarefa6",
+  "description": "descrição da minha tarefa",
+  "priority": 1
+}
+
+#####
+#####
+GET http://localhost:8080/api/private/tasks/3c0ee20f-6c3c-417e-9572-05f62ab541b8
+Accept: application/json
+Authorization: Bearer {{keyJwt}}
+
+#####
+#####
+GET http://localhost:8080/api/private/tasks/user
+Accept: application/json
+Authorization: Bearer {{keyJwt}}
+
+#####
+#####
+DELETE http://localhost:8080/api/private/tasks/b1d3346b-4aa3-4035-8336-33a23d71a1c6
+Accept: application/json
+Authorization: Bearer {{keyJwt}}
+

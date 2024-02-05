@@ -1,0 +1,43 @@
+#####
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "denis@email.com",
+  "username": "denis",
+  "password": "123456",
+  "bio": "denis bio"
+}
+#####
+#####
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+"email": "denis2@email.com",
+  "username": "denis2",
+  "password": "123456",
+  "bio": "denis bio2"
+}
+#####
+#####
+
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "denis@email.com",
+  "password": "123456"
+}
+#####
+#####
+GET http://localhost:8080/api/users
+Accept: application/json
+
+#####
+#####
+GET http://localhost:8080/api/private/users/2a2a8397-fa93-4a19-93ca-704444e73479
+Accept: application/json
+Authorization: Bearer {{keyJwt}}
+
+#####
