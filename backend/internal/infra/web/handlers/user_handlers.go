@@ -8,32 +8,32 @@ import (
 )
 
 type UserHandlers struct {
-	CreateUserUseCase      usecase.CreateUserUseCase
-	ListAllUsersUseCase    usecase.ListAllUsersUseCase
-	FindUserByIdUseCase    usecase.GetUserByIDUseCase
-	FindUserByEmailUseCase usecase.FindUserByEmailUseCase
-	UpdateUserByIDUseCase  usecase.UpdateUserByIDUseCase
-	DeleteUserByIDUseCase  usecase.DeleteUserByIDUseCase
-	LoginUseCase           usecase.LoginUseCase
+	CreateUserUseCase     usecase.CreateUserUseCase
+	ListAllUsersUseCase   usecase.ListAllUsersUseCase
+	GetUserByIdUseCase    usecase.GetUserByIDUseCase
+	GetUserByEmailUseCase usecase.GetUserByEmailUseCase
+	UpdateUserByIDUseCase usecase.UpdateUserByIDUseCase
+	DeleteUserByIDUseCase usecase.DeleteUserByIDUseCase
+	LoginUseCase          usecase.LoginUseCase
 }
 
 func NewUserHandlers(
 	createUserUseCase usecase.CreateUserUseCase,
 	listAllUsersUseCase usecase.ListAllUsersUseCase,
-	findUserByIdUseCase usecase.GetUserByIDUseCase,
-	findUserByEmailUseCase usecase.FindUserByEmailUseCase,
+	getUserByIdUseCase usecase.GetUserByIDUseCase,
+	getUserByEmailUseCase usecase.GetUserByEmailUseCase,
 	updateUserByIDUseCase usecase.UpdateUserByIDUseCase,
 	deleteUserByIDUseCase usecase.DeleteUserByIDUseCase,
 	loginUseCase usecase.LoginUseCase,
 ) *UserHandlers {
 	return &UserHandlers{
-		CreateUserUseCase:      createUserUseCase,
-		ListAllUsersUseCase:    listAllUsersUseCase,
-		FindUserByIdUseCase:    findUserByIdUseCase,
-		FindUserByEmailUseCase: findUserByEmailUseCase,
-		UpdateUserByIDUseCase:  updateUserByIDUseCase,
-		DeleteUserByIDUseCase:  deleteUserByIDUseCase,
-		LoginUseCase:           loginUseCase,
+		CreateUserUseCase:     createUserUseCase,
+		ListAllUsersUseCase:   listAllUsersUseCase,
+		GetUserByIdUseCase:    getUserByIdUseCase,
+		GetUserByEmailUseCase: getUserByEmailUseCase,
+		UpdateUserByIDUseCase: updateUserByIDUseCase,
+		DeleteUserByIDUseCase: deleteUserByIDUseCase,
+		LoginUseCase:          loginUseCase,
 	}
 }
 
@@ -41,23 +41,20 @@ func (u *UserHandlers) RegisterRoutes(server web.WebServer) {
 	server.Post("/users", u.CreateUser)
 	server.Post("/users/login", u.Login)
 
-	//server.Protected().Get("/users", u.GetAllLimitUsers)
-	server.Protected().Get("/users/:id", u.GetByID)
-	server.Protected().Patch("/users/:id", u.UpdateByID)
-	server.Protected().Delete("/users/:id", u.DeleteByID)
+	//server.Protected().Get("/users/all", u.GetAllLimitUsers)
+	server.Protected().Get("/users", u.GetByID)
+	server.Protected().Patch("/users", u.UpdateByID)
+	server.Protected().Delete("/users", u.DeleteByID)
 }
 
 func (u *UserHandlers) GetByID(c *fiber.Ctx) error {
-	id := c.Params("id", "invalid")
-	if id == "invalid" {
-		return c.Status(fiber.StatusBadRequest).JSON(web.ErrorResponse("id is required"))
-	}
-	usrOut, err := u.FindUserByIdUseCase.Execute(c.Context(), id)
+
+	id := GetUserIDFromCtx(c)
+	usrOut, err := u.GetUserByIdUseCase.Execute(c.Context(), id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(web.ErrorResponse(err.Error()))
 	}
 	return c.Status(fiber.StatusOK).JSON(usrOut)
-
 }
 
 func (u *UserHandlers) GetAllLimitUsers(c *fiber.Ctx) error {
@@ -89,12 +86,12 @@ func (u *UserHandlers) CreateUser(c *fiber.Ctx) error {
 }
 
 func (u *UserHandlers) DeleteByID(c *fiber.Ctx) error {
-	id := c.Params("id", "invalid")
-	if id == "invalid" {
-		return c.Status(fiber.StatusBadRequest).JSON(web.ErrorResponse("id is required"))
-	}
+	//id := c.Params("id", "invalid")
+	//if id == "invalid" {
+	//	return c.Status(fiber.StatusBadRequest).JSON(web.ErrorResponse("id is required"))
+	//}
 	err := u.DeleteUserByIDUseCase.Execute(c.Context(), dto.DeleteUserByIDInputDTO{
-		ID: id,
+		ID: GetUserIDFromCtx(c),
 	})
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(web.ErrorResponse(err.Error()))
@@ -103,15 +100,13 @@ func (u *UserHandlers) DeleteByID(c *fiber.Ctx) error {
 }
 
 func (u *UserHandlers) UpdateByID(c *fiber.Ctx) error {
-	id := c.Params("id", "invalid")
-	if id == "invalid" {
-		return c.Status(fiber.StatusBadRequest).JSON(web.ErrorResponse("id is required"))
-	}
+	userID := GetUserIDFromCtx(c)
 	var input dto.UpdateUserInputDTO
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(web.ErrorResponse(err.Error()))
 	}
+	input.UserID = userID
 	err = u.UpdateUserByIDUseCase.Execute(c.Context(), input)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(web.ErrorResponse(err.Error()))
@@ -122,7 +117,6 @@ func (u *UserHandlers) UpdateByID(c *fiber.Ctx) error {
 
 func (u *UserHandlers) Login(c *fiber.Ctx) error {
 	var input dto.LoginInputDTO
-	c.MultipartForm()
 	err := c.BodyParser(&input)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(web.ErrorResponse(err.Error()))

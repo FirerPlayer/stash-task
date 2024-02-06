@@ -12,7 +12,7 @@ type CreateTaskInputDTO struct {
 
 type CreateTaskOutputDTO struct {
 	ID          string    `json:"id"`
-	UserID      string    `json:"UserID"`
+	UserID      string    `json:"userID"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Priority    int       `json:"priority"`
@@ -37,7 +37,7 @@ type GetTaskByIDInputDTO struct {
 
 type GetTaskByIDOutputDTO struct {
 	ID          string    `json:"id"`
-	UserID      string    `json:"UserID"`
+	UserID      string    `json:"userID"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Priority    int       `json:"priority"`
@@ -54,7 +54,7 @@ type ListAllTasksInputDTO struct {
 
 type ListAllTasksOutputDTO struct {
 	ID          string    `json:"id"`
-	UserID      string    `json:"UserID"`
+	UserID      string    `json:"userID"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Priority    int       `json:"priority"`
@@ -65,14 +65,14 @@ type ListAllTasksOutputDTO struct {
 
 // List All Tasks By UserID
 type ListAllTasksByUserIDInputDTO struct {
-	UserID string `json:"UserID,omitempty"`
+	UserID string `json:"userID,omitempty"`
 	Limit  int    `json:"limit,omitempty"`
 	Offset int    `json:"offset,omitempty"`
 }
 
 type ListAllTasksByUserIDOutputDTO struct {
 	ID          string    `json:"id"`
-	UserID      string    `json:"UserID"`
+	UserID      string    `json:"userID"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Priority    int       `json:"priority"`

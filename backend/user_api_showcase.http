@@ -3,7 +3,7 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-  "email": "denis@email.com",
+  "email": "deni42@email.com",
   "username": "denis",
   "password": "123456",
   "bio": "denis bio"
@@ -31,12 +31,13 @@ Content-Type: application/json
 }
 #####
 #####
-GET http://localhost:8080/api/users
+GET http://localhost:8080/api/private/users
 Accept: application/json
+Authorization: Bearer {{keyJwt}}
 
 #####
 #####
-GET http://localhost:8080/api/private/users/2a2a8397-fa93-4a19-93ca-704444e73479
+GET http://localhost:8080/api/private/users
 Accept: application/json
 Authorization: Bearer {{keyJwt}}
 

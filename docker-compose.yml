@@ -1,0 +1,57 @@
+version: "3.9"
+
+networks:
+  homelab:
+    driver: bridge
+
+services:
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./pg/data:/var/lib/postgresql/data/pgdata
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - homelab
+  backend:
+    build: .
+    container_name: backend
+    volumes:
+      - ./backend:/go/src
+    ports:
+      - "8080:8080"
+    restart: always
+  frontend:
+    build: frontend
+    container_name: frontend
+    volumes:
+      - ./frontend:/home/bun/app
+    ports:
+      - "3000:3000"
+  # redis:
+  #   image: redis
+  #   container_name: redis
+  #   restart: always
+  #   environment:
+  #     # ALLOW_EMPTY_PASSWORD is recommended only for development.
+  #     # - ALLOW_EMPTY_PASSWORD=yes
+  #     - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+  #     - REDIS_PASSWORD=${REDIS_PASSWORD}
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - "./redis/data:/data"
+  #   networks:
+  #     - homelab

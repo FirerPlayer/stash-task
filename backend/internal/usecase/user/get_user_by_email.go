@@ -7,12 +7,12 @@ import (
 	"github.com/firerplayer/stash-task/backend/internal/usecase/dto"
 )
 
-type FindUserByEmailUseCase struct {
+type GetUserByEmailUseCase struct {
 	UsersGateway gateway.UsersGateway
 }
 
-func NewFindUserByEmailUseCase(usersGateway gateway.UsersGateway) *FindUserByEmailUseCase {
-	return &FindUserByEmailUseCase{
+func NewGetUserByEmailUseCase(usersGateway gateway.UsersGateway) *GetUserByEmailUseCase {
+	return &GetUserByEmailUseCase{
 		UsersGateway: usersGateway,
 	}
 }
@@ -22,7 +22,7 @@ func NewFindUserByEmailUseCase(usersGateway gateway.UsersGateway) *FindUserByEma
 // ctx is the context of the request.
 // email is the email of the user to retrieve.
 // Returns a pointer to a userID and an error if any occurred.
-func (uc *FindUserByEmailUseCase) Execute(ctx context.Context, email string) (*dto.GetUserByEmailOutputDTO, error) {
+func (uc *GetUserByEmailUseCase) Execute(ctx context.Context, email string) (*dto.GetUserByEmailOutputDTO, error) {
 	user, err := uc.UsersGateway.GetUserByEmail(ctx, email)
 	if err != nil {
 		return nil, errors.New("failed to find user -> " + err.Error())

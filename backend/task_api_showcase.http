@@ -19,7 +19,7 @@ Authorization: Bearer {{keyJwt}}
 #####
 GET http://localhost:8080/api/private/tasks/user
 Accept: application/json
-Authorization: Bearer {{keyJwt}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MDk3NzMwMDksImlkIjoiMmEyYTgzOTctZmE5My00YTE5LTkzY2EtNzA0NDQ0ZTczNDc5IiwidXNlcm5hbWUiOiJkZW5pcyJ9.lipAt9zQ9UWF1CutK-0sNjUl2X1A4UkxRLHnBGTJ-lM
 
 #####
 #####

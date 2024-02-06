@@ -43,7 +43,7 @@ func NewTasksHandlers(
 
 func (t *TasksHandlers) RegisterRoutes(server web.WebServer) {
 	server.Protected().Post("/tasks", t.CreateTask)
-	server.Protected().Get("/tasks/:id", t.GetTaskByID)
+	server.Protected().Get("/tasks/view/:id", t.GetTaskByID)
 	server.Protected().Put("/tasks/:id", t.UpdateTask)
 	server.Protected().Delete("/tasks/:id", t.DeleteTask)
 	server.Protected().Get("/tasks", t.ListAllTasks)
@@ -58,7 +58,7 @@ func (t *TasksHandlers) CreateTask(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(web.ErrorResponse(err.Error()))
 	}
-	input.UserID = t.getUserIDFromCtx(c)
+	input.UserID = GetUserIDFromCtx(c)
 	usrOut, err := t.CreateTaskUseCase.Execute(c.Context(), input)
 	return c.Status(fiber.StatusCreated).JSON(usrOut)
 }
@@ -93,9 +93,8 @@ func (t *TasksHandlers) ListAllTasks(c *fiber.Ctx) error {
 func (t *TasksHandlers) ListTasksByUser(c *fiber.Ctx) error {
 	limit := c.QueryInt("limit", 20)
 	offset := c.QueryInt("offset", 0)
-
 	tsk, err := t.ListTasksByUserUseCase.Execute(c.Context(), dto.ListAllTasksByUserIDInputDTO{
-		UserID: t.getUserIDFromCtx(c),
+		UserID: GetUserIDFromCtx(c),
 		Limit:  limit,
 		Offset: offset,
 	})
@@ -164,7 +163,7 @@ func (t *TasksHandlers) UncompleteTask(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusOK)
 }
 
-func (t *TasksHandlers) getUserIDFromCtx(c *fiber.Ctx) string {
+func GetUserIDFromCtx(c *fiber.Ctx) string {
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	return claims["id"].(string)

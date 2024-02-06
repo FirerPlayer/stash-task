@@ -38,7 +38,7 @@ type ListAllUsersOutputDTO struct {
 
 // Update UserID
 type UpdateUserInputDTO struct {
-	UserID   string `json:"userId"`
+	UserID   string `json:"userID"`
 	Email    string `json:"email"`
 	Avatar   []byte `json:"avatar"`
 	Bio      string `json:"bio"`

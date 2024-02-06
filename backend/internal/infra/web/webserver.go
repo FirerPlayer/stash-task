@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bytedance/sonic"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
@@ -102,7 +103,9 @@ func (wb *WebServer) GetApp() *fiber.App {
 
 func (wb *WebServer) Start() error {
 	wb.app.Use(logger.New())
+	wb.app.Use(cors.New(cors.Config{AllowOrigins: "*", AllowHeaders: "*"}))
 	apiR := wb.app.Group("/api")
+
 	apiR.Use("/"+protectedPrefix, Protected(wb.jwtSecretKey))
 
 	for path, hdl := range wb.getHandlers {

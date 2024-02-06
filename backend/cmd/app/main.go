@@ -64,7 +64,7 @@ func setupUsersHandlers(webserver web.WebServer, repoUserPg gateway.UsersGateway
 	createUserUseCase := ucUser.NewCreateUserUseCase(repoUserPg)
 	deleteUserByIdUseCase := ucUser.NewDeleteUserByIDUseCase(repoUserPg)
 	findUserByIdUseCase := ucUser.NewGetUserByIdUseCase(repoUserPg)
-	findUserByEmailUseCase := ucUser.NewFindUserByEmailUseCase(repoUserPg)
+	findUserByEmailUseCase := ucUser.NewGetUserByEmailUseCase(repoUserPg)
 	updateUserByIdUseCase := ucUser.NewUpdateUserUseCase(repoUserPg)
 	listAllUsersUseCase := ucUser.NewListAllUsersUseCase(repoUserPg)
 	loginUserUseCase := ucUser.NewLoginUseCase(repoUserPg, jwtSecretKey)
